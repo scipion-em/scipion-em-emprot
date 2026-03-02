@@ -60,7 +60,7 @@ class ProtEMProt(EMProtocol):
 
 
         form.addSection(label='Input')
-        form.addParam('inputVolume', params.PointerParam,
+        form.addParam('inputVolume', params.PointerParam, allowsNull=False,
                       pointerClass='Volume',
                       label="Input volume: ",
                       help='Select the electron map of the structure in MRC2014')
@@ -70,12 +70,12 @@ class ProtEMProt(EMProtocol):
                       label='Resolution: ',
                       help='Map resolution.')
 
-        form.addParam('inputSeq', params.PointerParam,
+        form.addParam('inputSeq', params.PointerParam, allowsNull=True,
                       pointerClass="Sequence",
                       label="Input Sequence: ",
                       help="Input sequence file.")
 
-        form.addParam('inputStructure', params.PointerParam, #todo this is the whole complex: --complex
+        form.addParam('inputStructure', params.PointerParam, allowsNull=True,
                       pointerClass='AtomStruct',
                       label="Input predicted model: ",
                       help='Select the predicted model.')
@@ -90,17 +90,20 @@ class ProtEMProt(EMProtocol):
     # --------------------------- STEPS functions ------------------------------
     def _insertAllSteps(self):
         self._insertFunctionStep(self.runEMProtStep)
-        #self._insertFunctionStep(self.createOutputStep)
+        self._insertFunctionStep(self.createOutputStep)
 
 
     def runEMProtStep(self):
         args = []
         args.extend([
             "--map", str(os.path.abspath(self.inputVolume.get().getFileName())),
-            "--seq", str(os.path.abspath(self.inputSeq.get().getFileName())),
-            "--complex", str(os.path.abspath(self.inputStructure.get().getFileName())),
             "--output", str(os.path.abspath(self._getExtraPath()))
         ])
+
+        if self.inputSeq.get() is not None:
+            args.append(f"--seq {str(os.path.abspath(self.inputSeq.get().getFileName()))}")
+        if self.inputStructure.get() is not None:
+            args.append(f"--complex {str(os.path.abspath(self.inputStructure.get().getFileName()))}")
 
         if self.resolution.get() != 0.0:
             args.append(f' --resolution {self.resolution.get()}')
@@ -128,6 +131,7 @@ class ProtEMProt(EMProtocol):
         self._defineOutputs(
             outputAtomStruct=bestStruct
         )
+
 
 
     # --------------------------- INFO functions -----------------------------------
