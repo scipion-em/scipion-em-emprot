@@ -21,7 +21,7 @@
 # *  e-mail address 'scipion@cnb.csic.es'
 # *
 # **************************************************************************
-
+import os
 from os.path import join, exists
 
 import pwem
