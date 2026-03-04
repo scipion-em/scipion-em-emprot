@@ -112,7 +112,7 @@ class ProtEMProt(EMProtocol):
         else:
             args.append(f'--nt {self.numberOfThreads.get()}')
         if self.fast.get():
-            args.append(f'--fast {self.fast.get()}')
+            args.append(f'--fast')
 
         Plugin.runCondaCommand(
             self,
