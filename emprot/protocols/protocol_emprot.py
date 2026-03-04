@@ -80,7 +80,7 @@ class ProtEMProt(EMProtocol):
                       label="Input predicted model: ",
                       help='Select the predicted model.')
 
-        form.addHidden('fast', params.BooleanParam, default=False, expertLevel=LEVEL_ADVANCED,
+        form.addHidden('fast', params.BooleanParam, default=False,
                        label="Fast mode: ",
                        help="Use when structures have >30000 aminoacids.")
 
