@@ -125,7 +125,7 @@ class ProtEMProt(EMProtocol):
     def createOutputStep(self):
         outDir = (self._getExtraPath())
 
-        finalOutput = os.path.join(outDir, 'output.cif')
+        finalOutput = os.path.join(outDir, 'output_fit.cif')
         bestStruct = AtomStruct(filename=finalOutput)
 
         self._defineOutputs(
