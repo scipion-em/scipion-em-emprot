@@ -125,7 +125,19 @@ class ProtEMProt(EMProtocol):
     def createOutputStep(self):
         outDir = (self._getExtraPath())
 
-        finalOutput = os.path.join(outDir, 'output_fit.cif')
+        fitFile = os.path.join(outDir, 'output_fit.cif')
+        fallbackFile = os.path.join(outDir, 'output.cif')
+        denovoFile = os.path.join(outDir, 'output_denovo.cif')
+
+        if os.path.exists(fitFile):
+            finalOutput = fitFile
+        elif os.path.exists(fallbackFile):
+            print('Fitted model was not found, using fallback output model')
+            finalOutput = fallbackFile
+        else:
+            print('Fitted model nor default output were not found, using fallback de novo model')
+            finalOutput = denovoFile
+
         bestStruct = AtomStruct(filename=finalOutput)
 
         self._defineOutputs(
@@ -138,7 +150,7 @@ class ProtEMProt(EMProtocol):
     def _summary(self):
         summary = ["Two additional models have been created in the extra folder. \n"
                    "output_denovo.cif: de novo model.\n"
-                   "output_fit.cif: fitted model."]
+                   "output.cif: output model."]
         return summary
 
     def _methods(self):
