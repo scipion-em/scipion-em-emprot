@@ -100,8 +100,18 @@ class ProtEMProt(EMProtocol):
             "--output", str(os.path.abspath(self._getExtraPath()))
         ])
 
-        if self.inputSeq.get() is not None:
+        if self.inputSeq.get().getFileName() is not None:
             args.append(f"--seq {str(os.path.abspath(self.inputSeq.get().getFileName()))}")
+        else:
+            seq = self.inputSeq.get().getSequence()
+            name = self.inputSeq.get().getSeqName()
+            seqSrc = os.path.join(self._getExtraPath(), f"{name}.fasta")
+
+            with open(seqSrc, "w") as f:
+                f.write(f">{name}_1|Chain A|Unknown organism\n")
+                f.write(f"{seq}\n")
+            args.append(f"--seq {str(os.path.abspath(seqSrc))}")
+
         if self.inputStructure.get() is not None:
             args.append(f"--complex {str(os.path.abspath(self.inputStructure.get().getFileName()))}")
 
